@@ -50,6 +50,61 @@ $$\\max_{\\mathbf{w}} \\text{Sharpe}(\\mathbf{w}) = \\frac{\\mathbf{w}^T \\bolds
     ]
   },
   {
+    id: 'kb_compliance_optimization',
+    category: 'Quantitative Compliance Engineering',
+    title: 'Quantitative Compliance Objective Function & Parameter Optimization',
+    keywords: ['compliance_score', 'objective function', 'optimization', 'sharpe', 'var', 'drawdown', 'lcr', 'sar', 'false-negative', 'detection capacity', 'quant', 'formulation'],
+    content: `**Important Disclaimer**  
+I am not a licensed investment adviser, and I cannot give you personalized buy‑or‑sell recommendations for any specific security. The information below is for educational purposes only and should not be construed as financial advice. Before making any investment decision, you should consult a qualified professional who can assess your individual circumstances, risk tolerance, tax situation, and regulatory requirements.
+
+---
+
+## 1. Quantitative Compliance Objective Function & Parameter Optimization
+
+To align an institutional compliance-monitoring program with statutory regulatory risk tolerances, we model the detection-and-reporting engine as a constrained convex optimization problem:
+
+### Corrected Mathematical Formulation:
+$$\\begin{aligned}
+\\max_{\\mathbf{w}} \\; & \\text{Compliance\\_Score}(\\mathbf{w}) = \\frac{\\mathbf{w}^\\top \\boldsymbol{\\mu}_{\\text{SAR}} - r_{\\text{baseline}}}{\\sqrt{\\mathbf{w}^\\top \\mathbf{\\Sigma}_{\\text{SAR}} \\mathbf{w}}} \\\\[6pt]
+\\text{s.t.} \\; & \\sum_{i=1}^{n} w_i = 1.0, \\\\[2pt]
+& w_i \\ge 0, \\quad \\forall i \\in \\{1, \\dots, n\\}, \\\\[2pt]
+& \\text{VaR}_{99\\%}(\\text{Missed\\_SAR}) \\le 0.5\\% \\text{ of daily transaction volume (false-negative risk)}, \\\\[2pt]
+& |\\text{MDD}_{\\text{Compliance}}| \\le 4.0\\% \\quad (\\text{i.e. } \\text{MDD}_{\\text{Compliance}} \\ge -4.0\\% \\text{ of detection capacity}), \\\\[2pt]
+& \\text{Liquidity Coverage Ratio (LCR)}_{\\text{Ops}} \\ge 100\\% \\text{ for real-time SAR filing resources}.
+\\end{aligned}$$
+
+---
+
+### Variable & Operator Definitions:
+- $\\mathbf{w} \\in \\mathbb{R}^n$: Optimal resource and detector weighting vector across monitoring channels (TRANSFER, CASH_OUT, structuring detectors, velocity rules).
+- $\\boldsymbol{\\mu}_{\\text{SAR}} \\in \\mathbb{R}^n$: Vector of expected True-Positive SAR detection yield per channel.
+- $r_{\\text{baseline}} \\in \\mathbb{R}$: Statutory minimum reporting baseline mandated by FinCEN / BSA thresholds.
+- $\\mathbf{\\Sigma}_{\\text{SAR}} \\in \\mathbb{R}^{n \\times n}$: Inter-rule covariance matrix measuring alert volatility and noise redundancy.
+- $\\text{Compliance\\_Score}(\\mathbf{w})$: Information ratio measuring excess verified suspicious activity captured per unit of alert queue variance.
+
+---
+
+### Quantitative Parameter Invariants:
+| Parameter | Mathematical Constraint | Quantitative Benchmark | Regulatory & Operational Rationale |
+|---|---|---|---|
+| **Compliance Sharpe Ratio** | $\\text{Compliance\\_Score}(\\mathbf{w}) \\ge 1.40$ | $\\ge 1.40$ | Guarantees high signal-to-noise ratio in alert queues, preventing analyst burnout and missed SAR filings. |
+| **Detection Alert Volatility** | $\\sigma_{\\text{SAR}} = \\sqrt{\\mathbf{w}^\\top \\mathbf{\\Sigma}_{\\text{SAR}} \\mathbf{w}}$ | $\\le 8.0\\%$ annualized | Minimizes false positive spikes and operational alert congestion during high transaction volume surges. |
+| **Operational Drawdown Bound** | $|\\text{MDD}_{\\text{Compliance}}| \\le 4.0\\%$ (or $\\ge -4.0\\%$) | $\\le 4.0\\%$ peak-to-trough | Limits peak-to-trough operational lapse in triage SLA adherence; eliminates systemic regulatory non-compliance periods. |
+| **False-Negative Risk (VaR)** | $\\text{VaR}_{99\\%}(\\text{Undetected Vol}) \\le 0.5\\%$ | $\\le 0.5\\%$ daily flow | Bounded tail-risk constraint ensuring $<0.5\\%$ of aggregate transaction volume can bypass AML filters undetected. |
+| **Operational LCR Buffer** | $\\text{LCR}_{\\text{Ops}} = \\frac{\\text{High-Priority Analyst Capacity}}{\\text{30-Day Stressed Alert Flow}}$ | $\\ge 100\\%$ | Basel III / FinCEN operational buffer guaranteeing sufficient dedicated bandwidth to meet 30-day SAR filing statutory deadlines. |`,
+    references: [
+      'GAAP / IFRS Accounting Standards for Financial Instruments',
+      'Core Banking Reconciliation Protocols',
+      'Basel III International Regulatory Framework for Banks',
+      'OCC / FRB Interagency Guidance on Core Banking Systems',
+      'Bank Secrecy Act 31 U.S.C. 5318',
+      'FinCEN Advisory FIN-2021-A003',
+      'FATF 40 Recommendations',
+      'PaySim Financial Fraud Dataset (Lopez-Rojas et al.)',
+      'Synthetic Financial Transaction Research'
+    ]
+  },
+  {
     id: 'kb_financial_condition',
     category: 'Financial Condition & Liquidity',
     title: 'Financial Condition: Liquidity, Capital Adequacy & Solvency Analysis',

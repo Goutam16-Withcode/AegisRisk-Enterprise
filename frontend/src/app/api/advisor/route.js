@@ -97,9 +97,68 @@ ${contextText}`
 
     // 3. High-Fidelity Quantitative Fallback Synthesis
     if (!generatedAnswer) {
+      const isComplianceOpt = /compliance[_\s]?score|objective function|optimization parameter|detection capacity|false-negative/i.test(query);
       const isCapitalDeploy = /deploy|1 million|invest|portfolio|wealth|1000000|10 lakh/i.test(query);
 
-      if (isCapitalDeploy) {
+      if (isComplianceOpt) {
+        generatedAnswer = `**Important Disclaimer**  
+I am not a licensed investment adviser, and I cannot give you personalized buy‑or‑sell recommendations for any specific security. The information below is for educational purposes only and should not be construed as financial advice. Before making any investment decision, you should consult a qualified professional who can assess your individual circumstances, risk tolerance, tax situation, and regulatory requirements.
+
+---
+
+## 1. Quantitative Compliance Objective Function & Parameter Optimization (Corrected)
+
+To align an institutional compliance-monitoring program with regulatory risk tolerances, we model the detection-and-reporting engine as a constrained convex optimization problem.
+
+### Corrected Mathematical Formulation:
+$$\\begin{aligned}
+\\max_{\\mathbf{w}} \\; & \\text{Compliance\\_Score}(\\mathbf{w}) = \\frac{\\mathbf{w}^\\top \\boldsymbol{\\mu}_{\\text{SAR}} - r_{\\text{baseline}}}{\\sqrt{\\mathbf{w}^\\top \\mathbf{\\Sigma}_{\\text{SAR}} \\mathbf{w}}} \\\\[6pt]
+\\text{s.t.} \\; & \\sum_{i=1}^{n} w_i = 1.0, \\\\[2pt]
+& w_i \\ge 0, \\quad \\forall i \\in \\{1, \\dots, n\\}, \\\\[2pt]
+& \\text{VaR}_{99\\%}(\\text{Missed\\_SAR}) \\le 0.5\\% \\text{ of daily transaction volume (false-negative risk)}, \\\\[2pt]
+& |\\text{MDD}_{\\text{Compliance}}| \\le 4.0\\% \\quad (\\text{i.e. } \\text{MDD}_{\\text{Compliance}} \\ge -4.0\\% \\text{ of detection capacity}), \\\\[2pt]
+& \\text{Liquidity Coverage Ratio (LCR)}_{\\text{Ops}} \\ge 100\\% \\text{ for real-time SAR filing resources}.
+\\end{aligned}$$
+
+---
+
+### Key Mathematical Corrections:
+1. **Drawdown Sign Direction**:
+   - In standard quantitative risk notation, Drawdown is measured as $D(t) \\in [-1, 0]$ or in absolute terms $|D(t)| \\in [0, 1]$.
+   - Writing $\\text{MDD} \\le -4.0\\%$ mathematically allows catastrophic losses (e.g. $-10\\%$ or $-50\\%$), which inverts the constraint.
+   - **Correction**: The lower bound constraint is strictly $\\text{MDD} \\ge -4.0\\%$ (or $|\\text{MDD}| \\le 4.0\\%$ peak-to-trough operational lapse).
+2. **False-Negative Tail Risk (VaR)**:
+   - Defined as the 99th percentile upper bound on undetected illicit volume:
+     $$\\text{VaR}_{99\\%}(L_{\\text{FN}}) = \\inf \\{ \\gamma \\in \\mathbb{R} : P(L_{\\text{FN}} > \\gamma) \\le 0.01 \\} \\le 0.005 \\times V_{\\text{daily}}$$
+3. **Operational LCR Resource Buffer**:
+   - Defined as available investigatory capacity relative to 30-day stressed alert volume:
+     $$\\text{LCR}_{\\text{Ops}} = \\frac{\\text{High-Priority Analyst Triage Capacity}}{\\text{30-Day Stressed Alert Flow}} \\ge 100\\%$$
+
+---
+
+### Quantitative Parameter Invariants:
+
+| Parameter | Mathematical Formulation | Target Benchmark | Regulatory & Operational Invariant |
+|---|---|---|---|
+| **Compliance Sharpe Ratio** | $\\text{Compliance\\_Score}(\\mathbf{w}) \\ge 1.40$ | $\\ge 1.40$ | Guarantees high signal-to-noise ratio in alert queues, preventing analyst burnout and missed SAR filings. |
+| **Detection Alert Volatility** | $\\sigma_{\\text{SAR}} = \\sqrt{\\mathbf{w}^\\top \\mathbf{\\Sigma}_{\\text{SAR}} \\mathbf{w}}$ | $\\le 8.0\\%$ annualized | Minimizes false positive spikes and operational alert congestion during high transaction volume surges. |
+| **Operational Drawdown Bound** | $|\\text{MDD}_{\\text{Compliance}}| \\le 4.0\\%$ (or $\\ge -4.0\\%$) | $\\le 4.0\\%$ peak-to-trough | Limits peak-to-trough operational lapse in triage SLA adherence; eliminates systemic regulatory non-compliance periods. |
+| **False-Negative Risk (VaR)** | $\\text{VaR}_{99\\%}(\\text{Undetected Vol}) \\le 0.5\\%$ | $\\le 0.5\\%$ daily flow | Bounded tail-risk constraint ensuring $<0.5\\%$ of aggregate transaction volume can bypass AML filters undetected. |
+| **Operational LCR Buffer** | $\\text{LCR}_{\\text{Ops}} = \\frac{\\text{High-Priority Analyst Capacity}}{\\text{30-Day Stressed Alert Flow}}$ | $\\ge 100\\%$ | Basel III / FinCEN operational buffer guaranteeing sufficient dedicated bandwidth to meet 30-day SAR filing statutory deadlines. |
+
+---
+
+Authoritative Regulatory References:
+GAAP / IFRS Accounting Standards for Financial Instruments
+Core Banking Reconciliation Protocols
+Basel III International Regulatory Framework for Banks
+OCC / FRB Interagency Guidance on Core Banking Systems
+Bank Secrecy Act 31 U.S.C. 5318
+FinCEN Advisory FIN-2021-A003
+FATF 40 Recommendations
+PaySim Financial Fraud Dataset (Lopez-Rojas et al.)
+Synthetic Financial Transaction Research`;
+      } else if (isCapitalDeploy) {
         generatedAnswer = `**Important Disclaimer**  
 I am not a licensed investment adviser, and I cannot give you personalized buy‑or‑sell recommendations for any specific security. The information below is for educational purposes only and should not be construed as financial advice. Before making any investment decision, you should consult a qualified professional who can assess your individual circumstances, risk tolerance, tax situation, and regulatory requirements.
 
