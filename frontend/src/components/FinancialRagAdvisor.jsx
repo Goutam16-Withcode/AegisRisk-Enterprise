@@ -640,7 +640,7 @@ export default function FinancialRagAdvisor() {
             </div>
 
             <div style={{ marginTop: '1.25rem', padding: '0.95rem 1.15rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', fontSize: '0.75rem', color: '#1e40af', lineHeight: 1.55 }}>
-              <strong>Quantitative Telemetry Index:</strong> Mean-variance efficient frontier vectors, liquidity coverage buffers (LCR $\ge 100\%$), 6.36M empirical PaySim distributions, and ledger discrepancy invariants ($\Delta_{\text{ledger}} = 0$).
+              <strong>Quantitative Telemetry Index:</strong> Mean-variance efficient frontier vectors, liquidity coverage buffers (LCR &ge; 100%), 6.36M empirical PaySim distributions, and ledger discrepancy invariants (&Delta;ledger = 0).
             </div>
           </div>
 
