@@ -10,9 +10,12 @@ const FEATURES = [
 
 export default function ModelIntelligence() {
   const [activeCodeTab, setActiveCodeTab] = useState('curl');
+  const [envMode, setEnvMode] = useState('prod'); // 'prod' or 'local'
   const [copied, setCopied] = useState(false);
 
-  const curlCode = `curl -X POST http://localhost:3000/api/predict \\
+  const baseUrl = envMode === 'prod' ? 'https://aegisrisk-enterprise.onrender.com' : 'http://localhost:3000';
+
+  const curlCode = `curl -X POST ${baseUrl}/api/predict \\
   -H "Content-Type: application/json" \\
   -d '{
     "type": "TRANSFER",
@@ -23,7 +26,7 @@ export default function ModelIntelligence() {
 
   const pythonCode = `import requests
 
-url = "http://localhost:3000/api/predict"
+url = "${baseUrl}/api/predict"
 payload = {
     "type": "TRANSFER",
     "amount": 181000.0,
@@ -36,7 +39,7 @@ data = response.json()
 print("Decision:", data["data"]["decision"])
 print("Risk Score:", data["data"]["riskScore"], "/ 100")`;
 
-  const jsCode = `const response = await fetch("http://localhost:3000/api/predict", {
+  const jsCode = `const response = await fetch("${baseUrl}/api/predict", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
@@ -100,24 +103,24 @@ console.log("Risk Score:", result.data.riskScore);`;
           <table className="data-table">
             <tbody>
               <tr>
-                <td style={{ color: '#64748b', width: '40%' }}>Core Classifier</td>
-                <td style={{ fontWeight: 600, fontFamily: 'var(--font-mono)' }}>DecisionTreeClassifier</td>
+                <td style={{ fontWeight: 600, color: '#64748b' }}>Algorithm Class</td>
+                <td>DecisionTreeClassifier (scikit-learn 1.3+)</td>
               </tr>
               <tr>
-                <td style={{ color: '#64748b' }}>Training Records</td>
-                <td style={{ fontFamily: 'var(--font-mono)' }}>6,362,620 transactions</td>
+                <td style={{ fontWeight: 600, color: '#64748b' }}>Training Corpus</td>
+                <td>6,362,620 transactions (PaySim)</td>
               </tr>
               <tr>
-                <td style={{ color: '#64748b' }}>Validation Accuracy</td>
-                <td style={{ fontWeight: 600, color: '#15803d', fontFamily: 'var(--font-mono)' }}>99.97%</td>
+                <td style={{ fontWeight: 600, color: '#64748b' }}>Tree Complexity</td>
+                <td>3,025 internal split nodes &bull; max depth 32</td>
               </tr>
               <tr>
-                <td style={{ color: '#64748b' }}>Tree Complexity</td>
-                <td style={{ fontFamily: 'var(--font-mono)' }}>3,025 nodes &bull; 32 split levels</td>
+                <td style={{ fontWeight: 600, color: '#64748b' }}>Inference Latency</td>
+                <td>&lt; 0.8ms (Zero GPU required)</td>
               </tr>
               <tr>
-                <td style={{ color: '#64748b' }}>Inference Latency</td>
-                <td style={{ fontFamily: 'var(--font-mono)' }}>&lt; 0.8ms (In-Memory Engine)</td>
+                <td style={{ fontWeight: 600, color: '#64748b' }}>Regulatory Auditing</td>
+                <td>Full GDPR Art. 22 & FCRA path transparency</td>
               </tr>
             </tbody>
           </table>
@@ -129,7 +132,7 @@ console.log("Risk Score:", result.data.riskScore);`;
         <div className="card-header">
           <div>
             <h2 className="card-title">Production REST API</h2>
-            <p className="card-description">Synchronous JSON endpoints for backend transaction routing</p>
+            <p className="card-description">Synchronous JSON endpoints for transaction risk routing</p>
           </div>
           <button
             type="button"
@@ -139,6 +142,48 @@ console.log("Risk Score:", result.data.riskScore);`;
           >
             {copied ? 'Copied' : 'Copy Code'}
           </button>
+        </div>
+
+        {/* Live Cluster Pill & Environment Selector */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', padding: '0.65rem 0.85rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.75rem' }}>
+            <span className="status-dot" style={{ background: '#10b981' }} />
+            <span style={{ fontWeight: 700, color: '#0f172a' }}>Target Cluster:</span>
+            <a href="https://aegisrisk-enterprise.onrender.com" target="_blank" rel="noreferrer" style={{ color: '#4338ca', fontWeight: 600, textDecoration: 'none' }}>
+              {baseUrl}
+            </a>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.25rem' }}>
+            <button
+              type="button"
+              className="preset-btn"
+              style={{
+                fontSize: '0.7rem',
+                padding: '0.15rem 0.5rem',
+                background: envMode === 'prod' ? '#065f46' : '#ffffff',
+                color: envMode === 'prod' ? '#ffffff' : '#475569',
+                borderColor: envMode === 'prod' ? '#065f46' : '#cbd5e1'
+              }}
+              onClick={() => setEnvMode('prod')}
+            >
+              Cloud Production
+            </button>
+            <button
+              type="button"
+              className="preset-btn"
+              style={{
+                fontSize: '0.7rem',
+                padding: '0.15rem 0.5rem',
+                background: envMode === 'local' ? '#0f172a' : '#ffffff',
+                color: envMode === 'local' ? '#ffffff' : '#475569',
+                borderColor: envMode === 'local' ? '#0f172a' : '#cbd5e1'
+              }}
+              onClick={() => setEnvMode('local')}
+            >
+              Localhost
+            </button>
+          </div>
         </div>
 
         {/* Language selector */}

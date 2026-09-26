@@ -21,6 +21,17 @@ export default function Header({ threshold, setThreshold }) {
           <span>Model Engine Ready (0.6ms)</span>
         </div>
 
+        <a
+          href="https://aegisrisk-enterprise.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="status-badge"
+          style={{ textDecoration: 'none', color: '#065f46', background: '#ecfdf5', borderColor: '#a7f3d0', cursor: 'pointer' }}
+        >
+          <span className="status-dot" style={{ background: '#10b981' }} />
+          <span>Live Cluster (Render)</span>
+        </a>
+
         <div className="status-badge" style={{ fontFamily: 'var(--font-mono)' }}>
           6.36M Trained Samples
         </div>

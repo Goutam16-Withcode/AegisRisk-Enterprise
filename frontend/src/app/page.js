@@ -54,12 +54,14 @@ export default function Home() {
       </main>
 
       {/* Clean Footer */}
-      <footer style={{ marginTop: '3rem', paddingTop: '1.25rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#64748b', fontSize: '0.75rem' }}>
+      <footer style={{ marginTop: '3rem', paddingTop: '1.25rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#64748b', fontSize: '0.75rem', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
           AegisRisk Enterprise &bull; Scikit-Learn DecisionTree v3.2 &bull; Core Banking Fraud & AML Platform
         </div>
-        <div>
-          Trained on 6,362,620 transactions &bull; Local zero-latency inference &bull; FinCEN / Basel III Compliant
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span>Live Cluster: <a href="https://aegisrisk-enterprise.onrender.com" target="_blank" rel="noopener noreferrer" style={{ color: '#4338ca', fontWeight: 600, textDecoration: 'none' }}>aegisrisk-enterprise.onrender.com</a></span>
+          <span>&bull;</span>
+          <span>6.36M PaySim Records &bull; FinCEN / Basel III Compliant</span>
         </div>
       </footer>
     </div>
