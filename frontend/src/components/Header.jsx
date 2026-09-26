@@ -7,11 +7,11 @@ export default function Header({ threshold, setThreshold }) {
       <div className="brand-section">
         {/* Pure Typographic Monogram (Zero Icons) */}
         <div className="brand-monogram">
-          FR
+          AR
         </div>
         <div>
-          <div className="brand-name">Fraud Risk Platform</div>
-          <div className="brand-tag">Decision Tree v3.2 &bull; Real-Time Risk Scoring</div>
+          <div className="brand-name">AegisRisk Enterprise</div>
+          <div className="brand-tag">Institutional AML & Fraud Defense Platform &bull; Decision Tree v3.2</div>
         </div>
       </div>
 

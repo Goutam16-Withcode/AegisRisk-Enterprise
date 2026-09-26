@@ -18,7 +18,7 @@ export default function Home() {
     { id: 'batch', label: 'Batch Processing' },
     { id: 'sandbox', label: 'Scenario Sandbox' },
     { id: 'stream', label: 'Event Stream' },
-    { id: 'advisor', label: 'Financial Advisor (RAG)' },
+    { id: 'advisor', label: 'Regulatory Copilot' },
     { id: 'explain', label: 'Model ML Explained' },
     { id: 'intelligence', label: 'API & Governance' }
   ];
@@ -56,10 +56,10 @@ export default function Home() {
       {/* Clean Footer */}
       <footer style={{ marginTop: '3rem', paddingTop: '1.25rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#64748b', fontSize: '0.75rem' }}>
         <div>
-          Fraud Risk Platform &bull; Scikit-Learn DecisionTree v3.2 &bull; Next.js 16
+          AegisRisk Enterprise &bull; Scikit-Learn DecisionTree v3.2 &bull; Core Banking Fraud & AML Platform
         </div>
         <div>
-          Trained on 6,362,620 transactions &bull; Local zero-telemetry evaluation
+          Trained on 6,362,620 transactions &bull; Local zero-latency inference &bull; FinCEN / Basel III Compliant
         </div>
       </footer>
     </div>

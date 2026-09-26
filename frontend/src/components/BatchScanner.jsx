@@ -138,31 +138,31 @@ export default function BatchScanner({ threshold }) {
 
       {/* KPI Cards */}
       {items.length > 0 && (
-        <div className="grid-4" style={{ marginBottom: '1.25rem' }}>
-          <div style={{ padding: '0.85rem 1rem', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
-            <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>TOTAL PROCESSED</div>
-            <div style={{ fontSize: '1.35rem', fontWeight: 700, color: '#0f172a', marginTop: '0.15rem' }}>{totalCount}</div>
-            <div style={{ fontSize: '0.7rem', color: '#475569' }}>100% Ingested</div>
+        <div className="grid-4" style={{ marginBottom: '1.5rem' }}>
+          <div className="metric-box indigo">
+            <div className="metric-label">Total Processed</div>
+            <div className="metric-value">{totalCount}</div>
+            <div className="metric-sub" style={{ color: '#4f46e5' }}>100% Ingested</div>
           </div>
 
-          <div style={{ padding: '0.85rem 1rem', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '6px' }}>
-            <div style={{ fontSize: '0.72rem', color: '#b91c1c', fontWeight: 600 }}>BLOCKED (HIGH RISK)</div>
-            <div style={{ fontSize: '1.35rem', fontWeight: 700, color: '#b91c1c', marginTop: '0.15rem' }}>{blockedCount}</div>
-            <div style={{ fontSize: '0.7rem', color: '#b91c1c' }}>
+          <div className="metric-box danger">
+            <div className="metric-label" style={{ color: '#b91c1c' }}>Blocked (High Risk)</div>
+            <div className="metric-value" style={{ color: '#b91c1c' }}>{blockedCount}</div>
+            <div className="metric-sub" style={{ color: '#b91c1c' }}>
               {totalCount > 0 ? ((blockedCount / totalCount) * 100).toFixed(1) : 0}% Incident Rate
             </div>
           </div>
 
-          <div style={{ padding: '0.85rem 1rem', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '6px' }}>
-            <div style={{ fontSize: '0.72rem', color: '#b45309', fontWeight: 600 }}>MANUAL REVIEW</div>
-            <div style={{ fontSize: '1.35rem', fontWeight: 700, color: '#b45309', marginTop: '0.15rem' }}>{reviewCount}</div>
-            <div style={{ fontSize: '0.7rem', color: '#b45309' }}>Step-up 2FA Required</div>
+          <div className="metric-box warning">
+            <div className="metric-label" style={{ color: '#b45309' }}>Manual Review</div>
+            <div className="metric-value" style={{ color: '#b45309' }}>{reviewCount}</div>
+            <div className="metric-sub" style={{ color: '#b45309' }}>Step-up 2FA Required</div>
           </div>
 
-          <div style={{ padding: '0.85rem 1rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px' }}>
-            <div style={{ fontSize: '0.72rem', color: '#15803d', fontWeight: 600 }}>ALLOWED (CLEARED)</div>
-            <div style={{ fontSize: '1.35rem', fontWeight: 700, color: '#15803d', marginTop: '0.15rem' }}>{allowedCount}</div>
-            <div style={{ fontSize: '0.7rem', color: '#15803d' }}>
+          <div className="metric-box success">
+            <div className="metric-label" style={{ color: '#047857' }}>Allowed (Cleared)</div>
+            <div className="metric-value" style={{ color: '#047857' }}>{allowedCount}</div>
+            <div className="metric-sub" style={{ color: '#047857' }}>
               ${totalExposure.toLocaleString(undefined, { maximumFractionDigits: 0 })} Blocked Capital
             </div>
           </div>

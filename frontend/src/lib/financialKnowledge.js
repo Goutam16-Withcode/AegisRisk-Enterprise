@@ -1,9 +1,41 @@
 /**
  * Financial Knowledge Base & RAG Index
- * Trained on PaySim 6.36M Dataset, Financial Condition Metrics, and Regulatory Standards
+ * Trained on PaySim 6.36M Dataset, Portfolio Deployment, and Banking Regulatory Standards
  */
 
 export const FINANCIAL_KNOWLEDGE_BASE = [
+  {
+    id: 'kb_capital_deployment',
+    category: 'Capital Deployment & Wealth Management',
+    title: 'Capital Deployment Framework (₹1M / $12,000 Portfolio Strategy)',
+    keywords: ['deploy', 'investment', 'invest', 'portfolio', '1 million', '1000000', '10 lakh', 'wealth', 'allocation', 'diversification', 'equity', 'debt', 'fixed income', 'objective'],
+    content: `**Important Disclaimer**  
+I am not a licensed investment adviser, and I cannot give you personalized buy‑or‑sell recommendations for any specific security. The information below is for educational purposes only and should not be construed as financial advice. Before making any investment decision, you should consult a qualified professional who can assess your individual circumstances, risk tolerance, tax situation, and regulatory requirements.
+
+---
+
+## 1. How to Think About Deploying ₹1 million (≈ $12,000 USD)
+
+| Step | What to Do | Why It Matters (Risk / Compliance) |
+|------|------------|------------------------------------|
+| **A. Define Your Investment Objectives** | • Time horizon (short‑term < 2 yr, medium 2‑5 yr, long > 5 yr)  <br>• Return expectations (growth vs. income) <br>• Liquidity needs (emergency fund, upcoming expenses) | Aligns your portfolio with personal cash‑flow needs and avoids forced selling during market stress. |
+| **B. Assess Your Risk Tolerance** | • Use a risk‑profiling questionnaire (e.g., “how would you react if your portfolio fell 15 % in a month?”) <br>• Consider age, income stability, existing debt, and regulatory capital limits if you are a professional investor. | Determines the appropriate mix of equity, debt, and alternative assets. |
+| **C. Build a Diversified Core Portfolio** | • **Equities** (large‑cap, mid‑cap, sector ETFs) <br>• **Fixed Income** (government bonds, high‑grade corporate bonds, liquid debt funds) <br>• **Cash / Short‑Term Instruments** (money‑market funds, liquid savings) <br>• **Optional Add‑Ons** (real‑estate REITs, gold, sovereign‑linked bonds) | Diversification reduces unsystematic risk and helps meet regulatory “single‑issuer concentration” limits (e.g., many jurisdictions require < 10 % exposure to any one issuer for retail investors). |
+| **D. Choose the Right Investment Vehicles** | • **Direct equity** via a demat account (requires research on individual stocks) <br>• **Mutual funds / ETFs** for instant diversification (lower operational risk) <br>• **Robo‑advisors** if you prefer algorithm‑driven asset allocation with built‑in rebalancing. | Reduces operational errors that can trigger AML red flags (e.g., rapid high‑value transfers to unknown accounts). |
+| **E. Implement Robust AML/KYC Practices** | • Open accounts only with regulated brokers/DPs that perform KYC and EDD. <br>• Keep transaction records for at least 5 years (per BSA/FinCEN). <br>• Avoid “structuring” – breaking a large purchase into multiple sub‑₹10 k transactions to evade reporting thresholds. | Non‑compliance can lead to SAR filing obligations, account freezes, or penalties. |
+| **F. Set Ongoing Monitoring & Review Cadence** | • Quarterly portfolio review (re‑balance to target asset allocation). <br>• Annual risk‑profile reassessment. <br>• Watch for regulatory updates (e.g., changes to LCR/NSFR for banks, new FATF guidance on crypto). | Early detection of portfolio drift or non-compliance mitigates risk and ensures capital preservation. |`,
+    references: [
+      'GAAP / IFRS Accounting Standards for Financial Instruments',
+      'Core Banking Reconciliation Protocols',
+      'Basel III International Regulatory Framework for Banks',
+      'OCC / FRB Interagency Guidance on Core Banking Systems',
+      'Bank Secrecy Act 31 U.S.C. 5318',
+      'FinCEN Advisory FIN-2021-A003',
+      'FATF 40 Recommendations',
+      'PaySim Financial Fraud Dataset (Lopez-Rojas et al.)',
+      'Synthetic Financial Transaction Research'
+    ]
+  },
   {
     id: 'kb_financial_condition',
     category: 'Financial Condition & Liquidity',
@@ -41,7 +73,12 @@ Financial condition is an ongoing measure of an institution's economic health, b
    - PAYMENT (2.15M records), CASH_IN (1.40M records), and DEBIT (41.4K records) have exactly 0% fraud.
 2. Attack Sequence: A typical attack consists of a fraudulent TRANSFER to a mule account, immediately followed by a rapid CASH_OUT withdrawal before the victim can freeze funds.
 3. Average Fraud Amount: Legitimate payments average ~$13,000, whereas fraudulent transfers average ~$1.47 million, targeting high-net-worth liquidity.`,
-    references: ['PaySim Financial Fraud Dataset (Lopez-Rojas et al.)', 'Synthetic Financial Transaction Research']
+    references: [
+      'PaySim Financial Fraud Dataset (Lopez-Rojas et al.)',
+      'Synthetic Financial Transaction Research',
+      'Bank Secrecy Act 31 U.S.C. 5318',
+      'FinCEN Advisory FIN-2021-A003'
+    ]
   },
   {
     id: 'kb_dataset_drain',
@@ -58,7 +95,11 @@ In contrast, legitimate account holders rarely drain their primary accounts to e
 Engineered Indicator:
 - Liquidation Ratio = (amount / oldbalanceOrg) * 100%
 - If Liquidation Ratio >= 95% AND Channel is TRANSFER or CASH_OUT, the probability of fraudulent compromise exceeds 99%.`,
-    references: ['Behavioral Anomaly Analysis in Financial Transactions', 'PaySim Ground Truth Labeling']
+    references: [
+      'Behavioral Anomaly Analysis in Financial Transactions',
+      'PaySim Ground Truth Labeling',
+      'Core Banking Reconciliation Protocols'
+    ]
   },
   {
     id: 'kb_ledger_discrepancy',
@@ -74,7 +115,11 @@ Discrepancy = |(oldbalanceOrg - newbalanceOrig) - amount|
 Anomalies Detected in Dataset:
 1. Zero Balance Velocity: Origin accounts with oldbalanceOrg = 0 moving $100,000+ through a transfer. This indicates ghost account creation or float manipulation.
 2. Inconsistent Settlement: Transactions where the recorded newbalanceOrig does not match oldbalanceOrg minus amount. Such discrepancies indicate system race conditions, unauthorized ledger adjustment, or synthetic testing leaks.`,
-    references: ['GAAP / IFRS Accounting Standards for Financial Instruments', 'Core Banking Reconciliation Protocols']
+    references: [
+      'GAAP / IFRS Accounting Standards for Financial Instruments',
+      'Core Banking Reconciliation Protocols',
+      'OCC / FRB Interagency Guidance on Core Banking Systems'
+    ]
   },
   {
     id: 'kb_model_tree_rules',
@@ -92,7 +137,11 @@ Anomalies Detected in Dataset:
 Regulatory Advantages:
 - Full traceability under GDPR Article 22 and FCRA explainability mandates. Every risk classification can output its exact split rules.
 - Sub-millisecond execution (< 0.8ms) with zero GPU overhead.`,
-    references: ['Scikit-Learn DecisionTreeClassifier Specification', 'Basel III Model Risk Management Framework']
+    references: [
+      'Scikit-Learn DecisionTreeClassifier Specification',
+      'Basel III International Regulatory Framework for Banks',
+      'PaySim Financial Fraud Dataset (Lopez-Rojas et al.)'
+    ]
   },
   {
     id: 'kb_aml_compliance',
@@ -103,7 +152,11 @@ Regulatory Advantages:
 1. Suspicious Activity Reports (SARs): Must be filed with FinCEN within 30 days when transactions of $5,000 or more have no apparent business or lawful purpose.
 2. Structuring / Smurfing: Deliberately breaking down transfers to just under $10,000 (e.g. $9,900) to evade Currency Transaction Reports (CTRs).
 3. Know Your Customer (KYC): Enhanced Due Diligence (EDD) must be triggered on high-risk wire corridors, Politically Exposed Persons (PEPs), and accounts exhibiting abrupt volume spikes.`,
-    references: ['Bank Secrecy Act 31 U.S.C. 5318', 'FinCEN Advisory FIN-2021-A003', 'FATF 40 Recommendations']
+    references: [
+      'Bank Secrecy Act 31 U.S.C. 5318',
+      'FinCEN Advisory FIN-2021-A003',
+      'FATF 40 Recommendations'
+    ]
   },
   {
     id: 'kb_recovery_wire',
@@ -115,8 +168,24 @@ Regulatory Advantages:
 2. Mule Account Freeze: Send urgent fraud dispatch notifications to the beneficiary bank to freeze the recipient mule account before physical ATM withdrawal.
 3. Law Enforcement Engagement: File an incident report with the FBI Internet Crime Complaint Center (IC3.gov) and obtain an official police report number.
 4. Credential Invalidation: Revoke all active API tokens, session cookies, and issue new authentication credentials.`,
-    references: ['FBI IC3 Financial Recovery Guidelines', 'Uniform Commercial Code (UCC) Article 4A']
+    references: [
+      'FBI IC3 Financial Recovery Guidelines',
+      'Uniform Commercial Code (UCC) Article 4A',
+      'Bank Secrecy Act 31 U.S.C. 5318'
+    ]
   }
+];
+
+export const AUTHORITATIVE_REFERENCES = [
+  'GAAP / IFRS Accounting Standards for Financial Instruments',
+  'Core Banking Reconciliation Protocols',
+  'Basel III International Regulatory Framework for Banks',
+  'OCC / FRB Interagency Guidance on Core Banking Systems',
+  'Bank Secrecy Act 31 U.S.C. 5318',
+  'FinCEN Advisory FIN-2021-A003',
+  'FATF 40 Recommendations',
+  'PaySim Financial Fraud Dataset (Lopez-Rojas et al.)',
+  'Synthetic Financial Transaction Research'
 ];
 
 /**

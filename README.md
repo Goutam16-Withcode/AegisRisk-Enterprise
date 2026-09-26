@@ -1,6 +1,6 @@
-# Fraud Risk Platform & Financial Intelligence Suite
+# AegisRisk Enterprise • Core Banking Fraud Defense & Regulatory Intelligence Suite
 
-Production-grade financial crime detection, real-time risk scoring, explainable AI (XAI) diagnostics, and an integrated Financial Retrieval-Augmented Generation (RAG) advisory copilot.
+Production-grade financial crime detection, real-time risk scoring, explainable AI (XAI) diagnostics, and an integrated Autonomous Regulatory & Financial Intelligence Copilot.
 
 ---
 
@@ -13,7 +13,7 @@ Production-grade financial crime detection, real-time risk scoring, explainable 
    - [Features & Mathematical Heuristics](#33-features--mathematical-heuristics)
    - [Splitting Logic & Gini Impurity](#34-splitting-logic--gini-impurity)
    - [Calibrated Risk Scoring & Policy Tiers](#35-calibrated-risk-scoring--policy-tiers)
-4. [Financial RAG Advisor (Copilot)](#4-financial-rag-advisor-copilot)
+4. [Autonomous Regulatory & Risk Intelligence Copilot](#4-autonomous-regulatory--risk-intelligence-copilot)
 5. [Frontend Application Modules](#5-frontend-application-modules)
 6. [Quick Start & Execution Guide](#6-quick-start--execution-guide)
    - [Next.js Web Application](#61-nextjs-web-application)
@@ -28,12 +28,12 @@ Production-grade financial crime detection, real-time risk scoring, explainable 
 
 ## 1. Overview
 
-The **Fraud Risk Platform** is an enterprise-grade financial risk platform designed with a clean, modern developer aesthetic (inspired by Stripe Radar and Linear). 
+**AegisRisk Enterprise** is an institutional financial risk platform designed with a clean, eye-comfort luxury developer aesthetic (inspired by Stripe Radar and Linear). 
 
 Unlike prototype demos that rely on black-box predictions, this platform combines:
 - A deterministic **Scikit-Learn Decision Tree Classifier** for sub-millisecond, auditable transaction risk classification.
 - Real-time **ledger discrepancy validation** to catch liquidation drain attacks.
-- A **Financial RAG Copilot** providing compliance, AML, and fraud recovery advisory backed by banking regulations (FinCEN, BSA, FATF, UCC 4A).
+- An **Autonomous Regulatory & Financial Intelligence Copilot** providing compliance, capital deployment frameworks, AML, and fraud recovery advisory backed by authoritative banking regulations (FinCEN, BSA, FATF, UCC 4A, Basel III).
 
 ---
 
@@ -129,45 +129,48 @@ Raw tree leaf ratios are calibrated into an actionable **0–100 Risk Score**:
 
 ---
 
-## 4. Financial RAG Advisor (Copilot)
+## 4. Autonomous Regulatory & Risk Intelligence Copilot
 
-The platform embeds a high-speed **Retrieval-Augmented Generation (RAG)** copilot powered by the **Groq LLaMA / GPT-120B** inference engine and indexed directly on financial fraud patterns and banking regulations:
+The platform embeds a high-speed **Retrieval-Augmented Generation (RAG)** copilot indexed directly on 6.36M transaction telemetry, financial fraud patterns, capital deployment frameworks, and banking regulations:
 
 ### 4.1 Knowledge Corpus & Authoritative Regulatory References
-1. **Financial Condition & Balance Sheet Health**:
+1. **Capital Deployment Framework (₹1M / $12,000 Portfolio Strategy)**:
+   - Structured 6-step roadmap (Investment Objectives, Risk Tolerance, Diversified Core Portfolio, Investment Vehicles, AML/KYC Practices, Review Cadence).
+   - Prominent statutory educational disclaimers.
+2. **Financial Condition & Balance Sheet Health**:
    - **Liquidity Coverage Ratio (LCR)** ($\ge 100\%$) & **Net Stable Funding Ratio (NSFR)** ($\ge 100\%$) under Basel III.
    - **Common Equity Tier 1 (CET1)** Capital Adequacy buffers ($\ge 4.5\%$ minimum / $\ge 8.5\%$ well-capitalized).
    - **Asset Quality & Non-Performing Loans (NPL)** thresholds ($< 2\text{--}3\%$).
    - *References*: **GAAP / IFRS Accounting Standards for Financial Instruments**, **Core Banking Reconciliation Protocols**, **OCC / FRB Interagency Guidance on Core Banking Systems**.
-2. **Dataset Empirical Findings (PaySim 6.36M Records)**:
+3. **Dataset Empirical Findings (PaySim 6.36M Records)**:
    - Empirical proof that fraud occurs exclusively on `TRANSFER` (0.769%) and `CASH_OUT` (0.184%).
    - Account liquidation signatures ($98.7\%$ of fraud cases drain accounts to exactly $\$0.00$).
-3. **Anti-Money Laundering (AML) & Suspicious Activity Reports (SAR)**:
+4. **Anti-Money Laundering (AML) & Suspicious Activity Reports (SAR)**:
    - Mandatory FinCEN SAR filing within 30 days for unexplained transactions of $\$5,000+$.
    - Smurfing and structuring evasion checks under $\$10,000$ CTR thresholds.
    - *References*: **Bank Secrecy Act (31 U.S.C. 5318)**, **FinCEN Advisory FIN-2021-A003**, **FATF 40 Recommendations**.
-4. **Emergency Asset Recovery & Recall Protocols**:
+5. **Emergency Asset Recovery & Recall Protocols**:
    - SWIFT MT199 and Fedwire recall procedures under the **Uniform Commercial Code (UCC) Article 4A**.
    - FBI IC3 financial fraud recovery and beneficiary mule account freeze guidelines.
 
 ### 4.2 RAG Architecture
 - **Retriever**: Multi-factor keyword and BM25 token matching extracts top matching regulatory and dataset documents.
-- **Generator**: Queries Groq's high-speed inference engine (`openai/gpt-oss-120b`) with the retrieved context and system instructions.
-- **Graceful Fallback**: If external API connectivity is unavailable, the local deterministic synthesis engine automatically generates structured advice with cited regulatory references.
+- **Generator**: Synthesizes regulatory directives, core banking ledger rules, and telemetry context.
+- **Graceful Fallback**: Local deterministic synthesis engine automatically generates structured advice with cited regulatory references when offline.
 
 ---
 
 ## 5. Frontend Application Modules
 
-Built with **Next.js 16**, **React 19**, and **Vanilla CSS** (zero dependency conflicts, crisp Inter typography, no emojis, clean developer UI):
+Built with **Next.js 16**, **React 19**, and **Vanilla CSS** (zero dependency conflicts, crisp Inter typography, no icons/emojis, clean eye-comfort UI):
 
 1. **Overview & Inspector**: Form for single transaction testing, preset scenario buttons, Stripe Radar-style horizontal risk meter, ledger check table, and expandable decision tree trace.
 2. **Batch Processing**: CSV file ingestion dropzone, 12 benchmark preloaded records, KPI stat cards, filterable forensic table (All / Blocked / Review / Allowed), and clean CSV export.
 3. **Scenario Sandbox**: Sliders for Channel, Amount, Old Balance, and New Balance with a balance math synchronization lock.
 4. **Event Stream**: Real-time simulated gateway event stream with play/pause, clear, and "Simulate Attack Event" triggers.
-5. **Model ML Explained**: Interactive technical documentation breaking down the model architecture, dataset, feature weights, Gini math, and risk tiers.
-6. **API & Governance**: Model governance specifications and interactive code snippets for **cURL**, **Python**, and **Node.js**.
-7. **Financial Advisor (RAG)**: Interactive chat copilot with semantic search across regulatory financial documents.
+5. **Regulatory Copilot (RAG)**: Interactive intelligence assistant with semantic search across regulatory financial documents and capital deployment strategies.
+6. **Model ML Explained**: Interactive technical documentation breaking down the model architecture, dataset, feature weights, Gini math, and risk tiers.
+7. **API & Governance**: Model governance specifications and interactive code snippets for **cURL**, **Python**, and **Node.js**.
 
 ---
 
