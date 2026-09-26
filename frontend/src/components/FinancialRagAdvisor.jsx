@@ -38,19 +38,20 @@ function FormattedAnswer({ text }) {
     remaining = remaining.replace(disclaimerMatch[0], '').replace(/^\s*---\s*/m, '').trim();
   }
 
-  // 2. Separate Authoritative Regulatory References
+  // 2. Separate Authoritative Regulatory References & Strictly Deduplicate
   let references = [];
   const refIndex = remaining.indexOf('Authoritative Regulatory References:');
   if (refIndex !== -1) {
     const refText = remaining.slice(refIndex + 'Authoritative Regulatory References:'.length).trim();
     remaining = remaining.slice(0, refIndex).replace(/---\s*$/, '').trim();
-    references = refText
+    const rawRefs = refText
       .split('\n')
       .map((r) => r.trim().replace(/^[-*•]\s*/, ''))
-      .filter(Boolean);
+      .filter((r) => r && !r.toLowerCase().includes('authoritative regulatory'));
+    references = Array.from(new Set(rawRefs));
   }
 
-  // 3. Parse remaining blocks: headings, tables, paragraphs
+  // 3. Parse remaining blocks: headings, math, tables, paragraphs, metric bullet points
   const blocks = [];
   const lines = remaining.split('\n');
   let currentTable = null;
@@ -58,7 +59,13 @@ function FormattedAnswer({ text }) {
 
   const flushParagraph = () => {
     if (currentParagraph.length > 0) {
-      blocks.push({ type: 'paragraph', content: currentParagraph.join('\n').trim() });
+      const pText = currentParagraph.join('\n').trim();
+      // Check if paragraph is purely math equation
+      if (pText.startsWith('$$') && pText.endsWith('$$')) {
+        blocks.push({ type: 'math', formula: pText.slice(2, -2).trim() });
+      } else {
+        blocks.push({ type: 'paragraph', content: pText });
+      }
       currentParagraph = [];
     }
   };
@@ -80,6 +87,13 @@ function FormattedAnswer({ text }) {
         type: 'heading',
         level: line.startsWith('## ') ? 2 : 3,
         text: line.replace(/^#{2,3}\s+/, '')
+      });
+    } else if (line.startsWith('$$') && line.endsWith('$$') && line.length > 4) {
+      flushParagraph();
+      flushTable();
+      blocks.push({
+        type: 'math',
+        formula: line.slice(2, -2).trim()
       });
     } else if (line.startsWith('|') && line.endsWith('|')) {
       flushParagraph();
@@ -162,15 +176,41 @@ function FormattedAnswer({ text }) {
             <div
               key={bIdx}
               style={{
-                fontSize: block.level === 2 ? '1.08rem' : '0.96rem',
+                fontSize: block.level === 2 ? '1.1rem' : '0.96rem',
                 fontWeight: 800,
                 color: '#0f172a',
                 letterSpacing: '-0.3px',
                 paddingBottom: '0.35rem',
-                borderBottom: '1px solid #f1f5f9'
+                borderBottom: '1px solid #f1f5f9',
+                marginTop: '0.5rem'
               }}
             >
               {block.text}
+            </div>
+          );
+        }
+
+        if (block.type === 'math') {
+          return (
+            <div
+              key={bIdx}
+              style={{
+                background: '#f8fafc',
+                border: '1px solid #cbd5e1',
+                borderLeft: '4px solid #4f46e5',
+                borderRadius: '8px',
+                padding: '0.85rem 1.15rem',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.82rem',
+                color: '#1e293b',
+                overflowX: 'auto',
+                boxShadow: '0 1px 2px rgba(15, 23, 42, 0.02)'
+              }}
+            >
+              <div style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#64748b', fontWeight: 700, marginBottom: '0.25rem' }}>
+                Mathematical Formulation & Objective
+              </div>
+              <code style={{ color: '#312e81', fontWeight: 600 }}>{block.formula}</code>
             </div>
           );
         }
@@ -194,7 +234,7 @@ function FormattedAnswer({ text }) {
                       <th
                         key={hIdx}
                         style={{
-                          padding: '0.75rem 1rem',
+                          padding: '0.8rem 1rem',
                           color: '#475569',
                           fontWeight: 700,
                           fontSize: '0.72rem',
@@ -221,6 +261,7 @@ function FormattedAnswer({ text }) {
                         }}
                       >
                         {row.map((cell, cIdx) => {
+                          // First Column: Step or Segment
                           if (cIdx === 0) {
                             const stepMatch = cell.match(/\*\*([A-F0-9\.\s]+)\*\*(.*)/);
                             const cleanCell = cell.replace(/\*\*/g, '');
@@ -256,7 +297,37 @@ function FormattedAnswer({ text }) {
                             );
                           }
 
-                          if (cIdx === 1) {
+                          // Second Column: Nominal Allocation / Target metrics
+                          if (cIdx === 1 && (cell.includes('₹') || cell.includes('%') || cell.includes('•'))) {
+                            if (cell.includes('₹') || cell.includes('%')) {
+                              return (
+                                <td
+                                  key={cIdx}
+                                  style={{
+                                    padding: '0.85rem 1rem',
+                                    verticalAlign: 'top',
+                                    borderRight: '1px solid #f1f5f9',
+                                    whiteSpace: 'nowrap'
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      display: 'inline-block',
+                                      padding: '0.25rem 0.6rem',
+                                      borderRadius: '6px',
+                                      background: '#ecfdf5',
+                                      color: '#065f46',
+                                      border: '1px solid #a7f3d0',
+                                      fontWeight: 800,
+                                      fontSize: '0.78rem'
+                                    }}
+                                  >
+                                    {cell.replace(/\*\*/g, '')}
+                                  </span>
+                                </td>
+                              );
+                            }
+
                             const bullets = cell
                               .split(/<br\s*\/?>|\n|•/)
                               .map((b) => b.trim())
@@ -288,16 +359,20 @@ function FormattedAnswer({ text }) {
                             );
                           }
 
+                          // Last column (Regulatory & Risk Invariant)
+                          const isLastCol = cIdx === row.length - 1;
+
                           return (
                             <td
                               key={cIdx}
                               style={{
                                 padding: '0.85rem 1rem',
                                 verticalAlign: 'top',
-                                color: '#475569',
+                                borderRight: !isLastCol ? '1px solid #f1f5f9' : 'none',
+                                color: isLastCol ? '#475569' : '#334155',
                                 fontSize: '0.78rem',
                                 lineHeight: 1.55,
-                                background: 'rgba(248, 250, 252, 0.45)'
+                                background: isLastCol ? 'rgba(248, 250, 252, 0.45)' : 'transparent'
                               }}
                             >
                               {formatBoldText(cell)}
@@ -314,6 +389,39 @@ function FormattedAnswer({ text }) {
         }
 
         if (block.type === 'paragraph') {
+          // If paragraph has bullet points of key metrics
+          const isBulletList = block.content.includes('- **') || block.content.includes('•');
+          if (isBulletList) {
+            const items = block.content.split('\n').filter(Boolean);
+            return (
+              <div
+                key={bIdx}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                  gap: '0.65rem'
+                }}
+              >
+                {items.map((it, iIdx) => (
+                  <div
+                    key={iIdx}
+                    style={{
+                      padding: '0.65rem 0.85rem',
+                      background: '#ffffff',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '6px',
+                      fontSize: '0.76rem',
+                      color: '#334155',
+                      boxShadow: '0 1px 2px rgba(15, 23, 42, 0.02)'
+                    }}
+                  >
+                    {formatBoldText(it.replace(/^[-*•]\s*/, ''))}
+                  </div>
+                ))}
+              </div>
+            );
+          }
+
           return (
             <div
               key={bIdx}
@@ -332,7 +440,7 @@ function FormattedAnswer({ text }) {
         return null;
       })}
 
-      {/* Authoritative References Block */}
+      {/* Authoritative Regulatory References Block */}
       {references.length > 0 && (
         <div
           style={{
@@ -392,7 +500,7 @@ export default function FinancialRagAdvisor() {
         setResult(json.data);
       }
     } catch (e) {
-      console.error('Advisor fetch error:', e);
+      console.error('Quant advisor fetch error:', e);
     } finally {
       setLoading(false);
     }
@@ -423,14 +531,14 @@ export default function FinancialRagAdvisor() {
     <div className="card">
       <div className="card-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-          {/* Typographic Monogram (Zero Icons) */}
+          {/* Pure Typographic Monogram (Zero Icons) */}
           <div className="bot-monogram">
-            RC
+            QI
           </div>
           <div>
-            <h2 className="card-title">Autonomous Regulatory & Risk Copilot</h2>
+            <h2 className="card-title">Autonomous Quant & Regulatory Copilot</h2>
             <p className="card-description">
-              Institutional RAG intelligence engine indexed on 6.36M PaySim telemetry, GAAP/IFRS standards, and FinCEN / FATF mandates
+              Quantitative risk engineering, portfolio optimization models, and regulatory telemetry over 6.36M PaySim records
             </p>
           </div>
         </div>
@@ -438,7 +546,7 @@ export default function FinancialRagAdvisor() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span className="status-badge" style={{ background: '#ecfdf5', color: '#065f46', borderColor: '#a7f3d0' }}>
             <span className="status-dot" style={{ background: '#10b981' }} />
-            <span>Regulatory Policy Engine Active</span>
+            <span>Quant Policy Core Active</span>
           </span>
 
           {result && (
@@ -448,7 +556,7 @@ export default function FinancialRagAdvisor() {
               style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
               onClick={handleCopy}
             >
-              {copied ? 'Copied' : 'Copy Advice'}
+              {copied ? 'Copied' : 'Copy Analysis'}
             </button>
           )}
         </div>
@@ -457,7 +565,7 @@ export default function FinancialRagAdvisor() {
       {/* Preset Queries */}
       <div style={{ marginBottom: '1.25rem' }}>
         <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.45rem' }}>
-          Suggested Financial & Regulatory Queries
+          Quantitative & Regulatory Telemetry Presets
         </div>
         <div className="presets-group">
           {SUGGESTED_QUERIES.map((item, idx) => (
@@ -479,7 +587,7 @@ export default function FinancialRagAdvisor() {
           type="text"
           className="form-input"
           style={{ flex: 1 }}
-          placeholder="Ask about deploying capital, financial condition, fraud patterns, or AML regulations..."
+          placeholder="Ask about quantitative capital deployment (₹1M), risk modeling, empirical fraud proofs, or AML regulations..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -489,7 +597,7 @@ export default function FinancialRagAdvisor() {
           style={{ padding: '0.55rem 1.25rem' }}
           disabled={loading}
         >
-          {loading ? 'Analyzing Directives...' : 'Query Copilot'}
+          {loading ? 'Synthesizing Quant Proofs...' : 'Evaluate Query'}
         </button>
       </form>
 
@@ -499,7 +607,7 @@ export default function FinancialRagAdvisor() {
           {/* Left Column: Retrieved Knowledge Documents */}
           <div>
             <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '0.55rem' }}>
-              Retrieved Dataset & Regulatory Chunks ({result.retrievedSources?.length || 0})
+              Indexed Regulatory & Quantitative Chunks ({result.retrievedSources?.length || 0})
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -532,14 +640,14 @@ export default function FinancialRagAdvisor() {
             </div>
 
             <div style={{ marginTop: '1.25rem', padding: '0.95rem 1.15rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', fontSize: '0.75rem', color: '#1e40af', lineHeight: 1.55 }}>
-              <strong>Knowledge Index:</strong> Financial condition metrics (LCR, CET1, NSFR), PaySim 6.36M transaction empirical distributions, and banking compliance protocols (GAAP/IFRS, FinCEN, BSA).
+              <strong>Quantitative Telemetry Index:</strong> Mean-variance efficient frontier vectors, liquidity coverage buffers (LCR $\ge 100\%$), 6.36M empirical PaySim distributions, and ledger discrepancy invariants ($\Delta_{\text{ledger}} = 0$).
             </div>
           </div>
 
           {/* Right Column: Generated Advice */}
           <div>
             <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '0.55rem' }}>
-              Autonomous Regulatory Assessment & Capital Strategy
+              Quantitative Research Guidance & Decision Matrix
             </div>
 
             <div
@@ -551,8 +659,8 @@ export default function FinancialRagAdvisor() {
             >
               {loading ? (
                 <div style={{ color: '#64748b', padding: '2.5rem 1rem', textAlign: 'center' }}>
-                  <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>Synthesizing Regulatory Directives & Empirical Telemetry...</div>
-                  <div style={{ fontSize: '0.75rem' }}>Evaluating Basel III capital adequacy, core banking ledger rules, and telemetry context</div>
+                  <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>Computing Optimization Parameters & Telemetry Verification...</div>
+                  <div style={{ fontSize: '0.75rem' }}>Evaluating Sharpe ratio, tail-risk bounds, and double-entry ledger invariants</div>
                 </div>
               ) : (
                 <FormattedAnswer text={result.answer} />
