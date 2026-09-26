@@ -2,7 +2,7 @@
 
 Production-grade financial crime detection, real-time risk scoring, explainable AI (XAI) diagnostics, and an integrated Autonomous Regulatory & Financial Intelligence Copilot.
 
-> **Live Production Deployment**: [https://aegisrisk-enterprise.onrender.com/](https://aegisrisk-enterprise.onrender.com/)  
+> **Live Production Deployment**: [(https://aegisriskenterprise.vercel.app/)]((https://aegisriskenterprise.vercel.app/))  
 > **Cluster Status**: Active &bull; Sub-millisecond Inference (&lt;0.8ms) &bull; FinCEN / Basel III Compliant
 
 ---
